@@ -1,0 +1,17 @@
+#+TITLE: README
+#+DATE: <2014-01-13 一>
+#+AUTHOR: manan
+#+EMAIL: manan@manan.org
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:comment d:nil date:t e:t email:nil
+#+OPTIONS: f:t inline:t num:t p:nil pri:nil stat:t tags:not-in-toc
+#+OPTIONS: tasks:t tex:t timestamp:t toc:t todo:t |:t
+#+CREATOR: Emacs 23.3.1 (Org mode 8.2.1)
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+
+* 电子书分类程序
+本程序根据书名从豆瓣获取书籍的标签信息，将电子书文件移动到与标签匹配的文件夹中。
