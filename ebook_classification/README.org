@@ -4,7 +4,7 @@
 #+EMAIL: manan@manan.org
 #+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
 #+OPTIONS: author:t c:nil creator:comment d:nil date:t e:t email:nil
-#+OPTIONS: f:t inline:t num:t p:nil pri:nil stat:t tags:not-in-toc
+#+OPTIONS: f:t inline:t num:nil p:nil pri:nil stat:t tags:not-in-toc
 #+OPTIONS: tasks:t tex:t timestamp:t toc:t todo:t |:t
 #+CREATOR: Emacs 23.3.1 (Org mode 8.2.1)
 #+DESCRIPTION:
