@@ -2,8 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 
-#BOOK_PATH = 'D:\\dest'
-BOOK_PATH = 'D:\\百度云同步盘\\book'
+BOOK_PATH = 'D:\\百度云同步盘\\01.personal\\book'
 
 def load_dir():
   list_dirs = os.walk(unicode(BOOK_PATH, 'utf8'))

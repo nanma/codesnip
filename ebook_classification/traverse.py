@@ -10,8 +10,9 @@ import logging
 import pdb 
 
 LOG_FILENAME = './ebook.log'
-
-query = '三国演义'
+SRC_PATH = 'D:/百度云同步盘/book/kindle书籍'
+TRASH_DIR = 'D:/trash/'
+NOTAG_DIR = 'D:/notag/'
 
 def get_tags(name):
   url = 'http://api.douban.com/v2/book/search?q=' + urllib.quote(name.encode('utf8'))
@@ -26,9 +27,9 @@ def get_tags(name):
   return tags
 
 def traverse(dir_dict):
-  path = 'D:/百度云同步盘/book/kindle书籍'
-  trash_dir = 'D:/trash/'
-  notag_dir = 'D:/notag/'
+  path = SRC_PATH
+  trash_dir = TRASH_DIR
+  notag_dir = NOTAG_DIR
   list_dirs = os.walk(unicode(path, 'utf8'))
   book_size = set()
   logger = get_log()
