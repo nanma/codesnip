@@ -1,0 +1,17 @@
+#+TITLE: README
+#+DATE: <2014-01-18 周六>
+#+AUTHOR:
+#+EMAIL: james@JAMES-PC
+#+OPTIONS: ':nil *:t -:t ::t <:t H:3 \n:nil ^:t arch:headline
+#+OPTIONS: author:t c:nil creator:comment d:(not LOGBOOK) date:t e:t
+#+OPTIONS: email:nil f:t inline:t num:nil p:nil pri:nil stat:t tags:t
+#+OPTIONS: tasks:t tex:t timestamp:t toc:t todo:t |:t
+#+CREATOR: Emacs 23.3.1 (Org mode 8.2.1)
+#+DESCRIPTION:
+#+EXCLUDE_TAGS: noexport
+#+KEYWORDS:
+#+LANGUAGE: en
+#+SELECT_TAGS: export
+
+* 工作日报发送程序
+本程序用于每日向指定邮箱发送工作日报，linux配置crontab方式参见程序内注释。
