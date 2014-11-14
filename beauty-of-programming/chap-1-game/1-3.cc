@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdio.h>
 #include <cassert>
 
 class CPrefixSorting {
@@ -12,8 +13,8 @@ class CPrefixSorting {
     if (m_CakeArray != NULL) {
       delete m_CakeArray;
     }
-    if (m_SwapArray != NULL) {
-      delete m_SwapArray;
+    if (m_arrSwap != NULL) {
+      delete m_arrSwap;
     }
     if (m_ReverseCakeArray != NULL) {
       delete m_ReverseCakeArray;
@@ -31,7 +32,7 @@ class CPrefixSorting {
 
   void Output() {
     for (int i = 0; i < m_nMaxSwap; i++) {
-      printf("%d", m_arrSwap[i]);
+      printf("%d ", m_arrSwap[i]);
     }
 
     printf("\n |Search Times| : %d\n", m_nSearch);
@@ -50,13 +51,13 @@ class CPrefixSorting {
     }
     m_nMaxSwap = UpBound(m_nCakeCnt);
 
-    m_SwapArray = new int[m_nMaxSwap + 1];
-    assert(m_SwapArray != NULL);
+    m_arrSwap = new int[m_nMaxSwap + 1];
+    assert(m_arrSwap != NULL);
     m_ReverseCakeArray = new int[m_nCakeCnt];
     for (int i = 0; i < m_nCakeCnt; i++) {
       m_ReverseCakeArray[i] = m_CakeArray[i];
     }
-    m_ReverseCakeArraySwap = new int[m_nMaxSwap];
+    m_ReverseCakeArraySwap = new int[m_nMaxSwap + 1];
   }
 
   int UpBound(int nCakeCnt) {
@@ -124,7 +125,6 @@ class CPrefixSorting {
   int* m_CakeArray;
   int m_nCakeCnt;
   int m_nMaxSwap;;
-  int* m_SwapArray;
   int* m_ReverseCakeArray;
   int* m_ReverseCakeArraySwap;
   int m_nSearch;
@@ -133,7 +133,8 @@ class CPrefixSorting {
 
 int main() {
   CPrefixSorting cp;
-  int array[5] = {2, 4, 1, 3, 5};
-  cp.Run(array, 5);
+  int array[3] = {3, 1, 2};
+  //  int array[5] = {1, 2, 3, 4, 5};
+  cp.Run(array, 3);
   cp.Output();
 }
