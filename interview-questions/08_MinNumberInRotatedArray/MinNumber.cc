@@ -7,7 +7,7 @@ using namespace std;
 int minNumber(int* array, int length) {
   if (array == NULL || length <= 0) {
     throw new std::exception();
-  }                                        
+  }
   int low = 0, high = length - 1, mid = 0;
   while (low <= high) {
     if (array[low] < array[high]) {
