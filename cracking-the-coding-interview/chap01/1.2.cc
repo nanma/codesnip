@@ -24,7 +24,7 @@ void reverse(char *str, int length) {
 
 int main() {
   char str[] = "abc";
-  reverse(str, 5);
+  reverse(str, 4);
   cout << str << endl;
   //  wchar_t a = '和';
   //  wcout << a << endl;

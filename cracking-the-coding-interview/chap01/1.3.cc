@@ -1,29 +1,30 @@
 #include <iostream>
+#include <string>
+#include <cstring>
+#include <algorithm>
 
 using namespace std;
 
-void remDup(char* str, int length) {
-  if (str == NULL || length <= 0) {
-    return;
+bool isPerm(string s, string t) {
+  if (s.length() != t.length()) {
+    return false;
   }
-  int tail = 0;
-  int i, j;
-  for (i = 0; i < length; ++i) {
-    for (j = 0; j < tail; ++j) {
-      if (str[i] == str[j]) {
-        break;
-      }
-    }
-    if (j == tail) {
-      str[tail] = str[i];
-      ++tail;
+  char *cs = new char[s.length() + 1];
+  char *ct = new char[t.length() + 1];
+  strcpy(cs, s.c_str());
+  strcpy(ct, t.c_str());
+  sort(cs, cs + s.length());
+  sort(ct, ct + t.length());
+  for (int i = 0; i < s.length(); i++) {
+    if (cs[i] != ct[i]) {
+      return false;
     }
   }
-  return;
+  return true;
 }
 
 int main() {
-  char s[] = "aaaaa";
-  remDup(s, 6);
-  cout << s << endl;
+  string s = "aedg", t = "gade";
+  cout << "res: " << isPerm(s, t) << endl;
+  return 0;
 }
