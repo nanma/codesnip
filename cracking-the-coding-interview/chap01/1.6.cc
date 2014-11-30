@@ -10,15 +10,18 @@ void rotate(int **array, int n) {
     for (int ind = 0; ind < curSize - 1; ind++) {
       int curCircle = (n - curSize) / 2;
       int tmp = array[curCircle][ind + curCircle];  //top
-      array[curCircle][ind + curCircle] = array[n - 1 - curCircle + ind][curCircle]; //left
-      array[n - 1 - curCircle + ind][curCircle] = array[n - 1 - curCircle][n - 1 - curCircle - ind]; //bottom;
-      array[n - 1 - curCircle][n - 1 - curCircle - ind] = array[curCircle + ind][n - 1 -curCircle];  //right
+      array[curCircle][ind + curCircle] =
+          array[n - 1 - curCircle + ind][curCircle]; //left
+      array[n - 1 - curCircle + ind][curCircle] =
+          array[n - 1 - curCircle][n - 1 - curCircle - ind]; //bottom;
+      array[n - 1 - curCircle][n - 1 - curCircle - ind] =
+          array[curCircle + ind][n - 1 -curCircle];  //right
       array[curCircle + ind][n - 1 -curCircle] = tmp;
     }
   }
 }
 
-void prtMat(int ** mat, int n) {
+void prtMat(int **mat, int n) {
   for (int i = 0; i < n; i++) {
     for (int j = 0; j < n; j++) {
       std::cout << mat[i][j] << " ";
@@ -28,7 +31,11 @@ void prtMat(int ** mat, int n) {
 }
 
 int main() {
-  //  int array[2][2] = {{1, 2}, {4, 3}};
+  int ab[2][2] = {{1, 2}, {4, 3}};
+  int **c = (int **)ab;
+  std::cout << &ab[0][0] << ", " << ab[0] << std::endl;
+  std::cout << c[0] << std::endl;
+
   int **a = (int **) malloc(sizeof(int *) * 2);
   int **tmp = a;
   *tmp++ = (int *) malloc(sizeof(int) * 2);
@@ -38,7 +45,7 @@ int main() {
   a[1][0] = 4;
   a[1][1] = 3;
 
-  prtMat(a, 2);
-  rotate(a, 2);
-  prtMat(a, 2);
+//   prtMat((int **)ab, 2);
+//   rotate((int**)ab, 2);
+//   prtMat((int **)ab, 2);
 }
