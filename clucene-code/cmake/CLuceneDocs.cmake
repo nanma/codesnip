@@ -2,7 +2,7 @@
 # This file provides support for building the CLucene Documentation.
 # To build the documention, you will have to enable it
 # and then do the equivalent of "make doc".
-OPTION(ENABLE_CLDOCS "Build the clucene documentation." OFF)
+OPTION(ENABLE_CLDOCS "Build the clucene documentation." YES)
 
 MACRO(SET_YESNO)
     FOREACH(param ${ARGV})
