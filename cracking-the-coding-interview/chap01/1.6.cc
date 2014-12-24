@@ -44,7 +44,6 @@ int main() {
   a[0][1] = 2;
   a[1][0] = 4;
   a[1][1] = 3;
-
 //   prtMat((int **)ab, 2);
 //   rotate((int**)ab, 2);
 //   prtMat((int **)ab, 2);
