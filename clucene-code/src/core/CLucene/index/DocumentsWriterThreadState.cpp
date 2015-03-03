@@ -1,9 +1,9 @@
 /*------------------------------------------------------------------------------
-* Copyright (C) 2003-2006 Ben van Klinken and the CLucene Team
-*
-* Distributable under the terms of either the Apache License (Version 2.0) or
-* the GNU Lesser General Public License, as specified in the COPYING file.
-------------------------------------------------------------------------------*/
+ * Copyright (C) 2003-2006 Ben van Klinken and the CLucene Team
+ *
+ * Distributable under the terms of either the Apache License (Version 2.0) or
+ * the GNU Lesser General Public License, as specified in the COPYING file.
+ ------------------------------------------------------------------------------*/
 #include "CLucene/_ApiHeader.h"
 
 #include "CLucene/store/Directory.h"
@@ -43,16 +43,16 @@ CL_NS_DEF(index)
 
 
 DocumentsWriter::ThreadState::ThreadState(DocumentsWriter* __parent):
-  postingsFreeListTS(ValueArray<Posting*>(256)),
+postingsFreeListTS(ValueArray<Posting*>(256)),
   vectorFieldPointers(ValueArray<int64_t>(10)),
   vectorFieldNumbers(ValueArray<int32_t>(10)),
   fieldDataArray(ValueArray<FieldData*>(8)),
   fieldDataHash(ValueArray<FieldData*>(16)),
   postingsVectors(ObjectArray<PostingVector>(1)),
-  postingsPool( _CLNEW ByteBlockPool(true, __parent) ),
+    postingsPool( _CLNEW ByteBlockPool(true, __parent) ),
   vectorsPool( _CLNEW ByteBlockPool(false, __parent) ),
   charPool( _CLNEW CharBlockPool(__parent) ),
-  allFieldDataArray(ValueArray<FieldData*>(10)),
+allFieldDataArray(ValueArray<FieldData*>(10)),
   _parent(__parent)
 {
   fieldDataHashMask = 15;
@@ -201,8 +201,8 @@ void DocumentsWriter::ThreadState::init(Document* doc, int32_t docID) {
     Field* field = docFields[i];
 
     FieldInfo* fi = _parent->fieldInfos->add(field->name(), field->isIndexed(), field->isTermVectorStored(),
-                                  field->isStorePositionWithTermVector(), field->isStoreOffsetWithTermVector(),
-                                  field->getOmitNorms(), false);
+                                             field->isStorePositionWithTermVector(), field->isStoreOffsetWithTermVector(),
+                                             field->getOmitNorms(), false);
     if (fi->isIndexed && !fi->omitNorms) {
       // Maybe grow our buffered norms
       if (_parent->norms.length <= fi->number) {
@@ -270,8 +270,8 @@ void DocumentsWriter::ThreadState::init(Document* doc, int32_t docID) {
     if (field->isTermVectorStored()) {
       if (!fp->doVectors && numVectorFields++ == vectorFieldPointers.length) {
         const int32_t newSize = (int32_t)(numVectorFields*1.5);
-		    vectorFieldPointers.resize(newSize);
-		    vectorFieldNumbers.resize(newSize);
+        vectorFieldPointers.resize(newSize);
+        vectorFieldNumbers.resize(newSize);
       }
       fp->doVectors = true;
       docHasVectors = true;
@@ -684,7 +684,7 @@ void DocumentsWriter::ThreadState::writeOffsetByte(uint8_t b) {
 }
 
 void DocumentsWriter::ThreadState::writePosVInt(int32_t vi) {
-	uint32_t i = vi;
+  uint32_t i = vi;
   while ((i & ~0x7F) != 0) {
     writePosByte((uint8_t)((i & 0x7f) | 0x80));
     i >>= 7; //unsigned shift...
@@ -705,10 +705,10 @@ void DocumentsWriter::ThreadState::writePosByte(uint8_t b) {
 
 
 DocumentsWriter::ThreadState::FieldData::FieldData(DocumentsWriter* __parent, ThreadState* __threadState, FieldInfo* fieldInfo):
-  docFields(ValueArray<Field*>(1)),
-  _parent(__parent),
-  localToken (_CLNEW Token),
-  vectorSliceReader(_CLNEW ByteSliceReader())
+    docFields(ValueArray<Field*>(1)),
+    _parent(__parent),
+    localToken (_CLNEW Token),
+    vectorSliceReader(_CLNEW ByteSliceReader())
 {
   this->fieldCount = this->postingsHashSize = this->postingsHashHalfSize = this->postingsVectorsUpto = 0;
   this->postingsHashMask = this->offsetEnd = 0;
@@ -804,15 +804,15 @@ void DocumentsWriter::ThreadState::FieldData::processField(Analyzer* analyzer) {
           threadState->localFieldsWriter->writeField(fieldInfo, field);
           success = true;
         } _CLFINALLY(
-          // If we hit an exception inside
-          // localFieldsWriter->writeField, the
-          // contents of fdtLocal can be corrupt, so
-          // we must discard all stored fields for
-          // this document:
-          if (!success)
-            threadState->fdtLocal->reset();
-        )
-      }
+            // If we hit an exception inside
+            // localFieldsWriter->writeField, the
+            // contents of fdtLocal can be corrupt, so
+            // we must discard all stored fields for
+            // this document:
+            if (!success)
+              threadState->fdtLocal->reset();
+                     )
+              }
 
       docFieldsFinal.values[j] = NULL;
     }
@@ -820,34 +820,35 @@ void DocumentsWriter::ThreadState::FieldData::processField(Analyzer* analyzer) {
     doWriteVectors = false;
     throw ae;
   } _CLFINALLY (
-    if (postingsVectorsUpto > 0) {
-      try {
-        if (doWriteVectors) {
-          // Add term vectors for this field
-          bool success = false;
-          try {
-            writeVectors(fieldInfo);
-            success = true;
-          } _CLFINALLY (
-            if (!success) {
-              // If we hit an exception inside
-              // writeVectors, the contents of tvfLocal
-              // can be corrupt, so we must discard all
-              // term vectors for this document:
-              threadState->numVectorFields = 0;
-              threadState->tvfLocal->reset();
-            }
-          )
+      if (postingsVectorsUpto > 0) {
+        try {
+          if (doWriteVectors) {
+            // Add term vectors for this field
+            bool success = false;
+            try {
+              writeVectors(fieldInfo);
+              success = true;
+            } _CLFINALLY (
+                if (!success) {
+                  // If we hit an exception inside
+                  // writeVectors, the contents of tvfLocal
+                  // can be corrupt, so we must discard all
+                  // term vectors for this document:
+                  threadState->numVectorFields = 0;
+                  threadState->tvfLocal->reset();
+                }
+                          )
+                  }
+        } _CLFINALLY (
+            if (postingsVectorsUpto > threadState->maxPostingsVectors)
+              threadState->maxPostingsVectors = postingsVectorsUpto;
+            postingsVectorsUpto = 0;
+            threadState->vectorsPool->reset();
+                      )
+              }
+                )
         }
-      } _CLFINALLY (
-        if (postingsVectorsUpto > threadState->maxPostingsVectors)
-          threadState->maxPostingsVectors = postingsVectorsUpto;
-        postingsVectorsUpto = 0;
-        threadState->vectorsPool->reset();
-      )
-    }
-  )
-}
+
 void DocumentsWriter::ThreadState::FieldData::invertField(Field* field, Analyzer* analyzer, const int32_t maxFieldLength) {
 
   if (length>0)
@@ -904,47 +905,47 @@ void DocumentsWriter::ThreadState::FieldData::invertField(Field* field, Analyzer
         addPosition(token);
         ++length;
 
-				// Apply field truncation policy.
-				if (maxFieldLength != IndexWriter::FIELD_TRUNC_POLICY__WARN) {
-					// The client programmer has explicitly authorized us to
-					// truncate the token stream after maxFieldLength tokens.
-					if ( length >= maxFieldLength) {
-	          if (_parent->infoStream != NULL)
-	            (*_parent->infoStream) << "maxFieldLength "  << maxFieldLength << " reached for field " << fieldInfo->name << ", ignoring following tokens\n";
-						break;
-					}
-				} else if (length > IndexWriter::DEFAULT_MAX_FIELD_LENGTH) {
-					const TCHAR* errMsgBase =
-						_T("Indexing a huge number of tokens from a single")
-						_T(" field (\"%s\", in this case) can cause CLucene")
-						_T(" to use memory excessively.")
-						_T("  By default, CLucene will accept only %s tokens")
-						_T(" tokens from a single field before forcing the")
-						_T(" client programmer to specify a threshold at")
-						_T(" which to truncate the token stream.")
-						_T("  You should set this threshold via")
-						_T(" IndexReader::maxFieldLength (set to LUCENE_INT32_MAX")
-						_T(" to disable truncation, or a value to specify maximum number of fields).");
+        // Apply field truncation policy.
+        if (maxFieldLength != IndexWriter::FIELD_TRUNC_POLICY__WARN) {
+          // The client programmer has explicitly authorized us to
+          // truncate the token stream after maxFieldLength tokens.
+          if ( length >= maxFieldLength) {
+            if (_parent->infoStream != NULL)
+              (*_parent->infoStream) << "maxFieldLength "  << maxFieldLength << " reached for field " << fieldInfo->name << ", ignoring following tokens\n";
+            break;
+          }
+        } else if (length > IndexWriter::DEFAULT_MAX_FIELD_LENGTH) {
+          const TCHAR* errMsgBase =
+              _T("Indexing a huge number of tokens from a single")
+              _T(" field (\"%s\", in this case) can cause CLucene")
+              _T(" to use memory excessively.")
+              _T("  By default, CLucene will accept only %s tokens")
+              _T(" tokens from a single field before forcing the")
+              _T(" client programmer to specify a threshold at")
+              _T(" which to truncate the token stream.")
+              _T("  You should set this threshold via")
+              _T(" IndexReader::maxFieldLength (set to LUCENE_INT32_MAX")
+              _T(" to disable truncation, or a value to specify maximum number of fields).");
 
-					TCHAR defaultMaxAsChar[34];
-					_i64tot(IndexWriter::DEFAULT_MAX_FIELD_LENGTH,
-						defaultMaxAsChar, 10
-					);
-					int32_t errMsgLen = _tcslen(errMsgBase)
-						+ _tcslen(fieldInfo->name)
-						+ _tcslen(defaultMaxAsChar);
-					TCHAR* errMsg = _CL_NEWARRAY(TCHAR,errMsgLen+1);
+          TCHAR defaultMaxAsChar[34];
+          _i64tot(IndexWriter::DEFAULT_MAX_FIELD_LENGTH,
+                  defaultMaxAsChar, 10
+                  );
+          int32_t errMsgLen = _tcslen(errMsgBase)
+                              + _tcslen(fieldInfo->name)
+                              + _tcslen(defaultMaxAsChar);
+          TCHAR* errMsg = _CL_NEWARRAY(TCHAR,errMsgLen+1);
 
-					_sntprintf(errMsg, errMsgLen,errMsgBase, fieldInfo->name, defaultMaxAsChar);
+          _sntprintf(errMsg, errMsgLen,errMsgBase, fieldInfo->name, defaultMaxAsChar);
 
-					_CLTHROWT_DEL(CL_ERR_Runtime,errMsg);
-				}
+          _CLTHROWT_DEL(CL_ERR_Runtime,errMsg);
+        }
       }
       offset = offsetEnd+1;
     } _CLFINALLY (
-      stream->close(); //don't delete, this stream is re-used
-    )
-  }
+        stream->close(); //don't delete, this stream is re-used
+                  )
+          }
 
   boost *= field->getBoost();
 }
@@ -1000,11 +1001,11 @@ void DocumentsWriter::ThreadState::FieldData::addPosition(Token* token) {
   int32_t downto = tokenTextLen;
   while (downto > 0)
     code = (code*31) + tokenText[--downto];
-/*
-  std::cout << "  addPosition: buffer=" << Misc::toString(tokenText).substr(0,tokenTextLen) << " pos=" << position
-            << " offsetStart=" << (offset+token->startOffset()) << " offsetEnd=" << (offset + token->endOffset())
-            << " docID=" << threadState->docID << " doPos=" << (doVectorPositions?"true":"false") << " doOffset=" << (doVectorOffsets?"true":"false") << "\n";
-*/
+  /*
+    std::cout << "  addPosition: buffer=" << Misc::toString(tokenText).substr(0,tokenTextLen) << " pos=" << position
+    << " offsetStart=" << (offset+token->startOffset()) << " offsetEnd=" << (offset + token->endOffset())
+    << " docID=" << threadState->docID << " doPos=" << (doVectorPositions?"true":"false") << " doOffset=" << (doVectorOffsets?"true":"false") << "\n";
+  */
   int32_t hashPos = code & postingsHashMask;
 
   assert (!postingsCompacted);
@@ -1036,10 +1037,10 @@ void DocumentsWriter::ThreadState::FieldData::addPosition(Token* token) {
     if (threadState->p != NULL) {       // term seen since last flush
 
       if (threadState->docID != threadState->p->lastDocID) { // term not yet seen in this doc
-/*
-        std::cout << "    seen before (new docID=" << threadState->docID << ") freqUpto=" << threadState->p->freqUpto
-                  << " proxUpto=" << threadState->p->proxUpto << "\n";
-*/
+        /*
+          std::cout << "    seen before (new docID=" << threadState->docID << ") freqUpto=" << threadState->p->freqUpto
+          << " proxUpto=" << threadState->p->proxUpto << "\n";
+        */
         assert (threadState->p->docFreq > 0);
 
         // Now that we know doc freq for previous doc,
@@ -1072,7 +1073,7 @@ void DocumentsWriter::ThreadState::FieldData::addPosition(Token* token) {
         threadState->p->lastDocID = threadState->docID;
 
       } else {                                // term already seen in this doc
-         //std::cout << "    seen before (same docID=" << threadState->docID << ") proxUpto=" << threadState->p->proxUpto << "\n";
+        //std::cout << "    seen before (same docID=" << threadState->docID << ") proxUpto=" << threadState->p->proxUpto << "\n";
 
         threadState->p->docFreq++;
 

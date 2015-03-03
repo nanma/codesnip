@@ -1,7 +1,7 @@
-/*------------------------------------------------------------------------------
+0;95;c/*------------------------------------------------------------------------------
 * Copyright (C) 2003-2006 Ben van Klinken and the CLucene Team
-* 
-* Distributable under the terms of either the Apache License (Version 2.0) or 
+*
+* Distributable under the terms of either the Apache License (Version 2.0) or
 * the GNU Lesser General Public License, as specified in the COPYING file.
 ------------------------------------------------------------------------------*/
 #ifndef _lucene_Config_
@@ -9,7 +9,7 @@
 
 
 ////////////////////////////////////////////////////////////////////
-//   this settings should be set up in the compiler, 
+//   this settings should be set up in the compiler,
 //   but are put here for reference as to what could be defined
 ////////////////////////////////////////////////////////////////////
 //
@@ -61,7 +61,7 @@
 #define LUCENE_LOCK_DIR_ENV_1 "TEMP"
 //define this if you want to have look up this environment variable if the first one fails
 #define LUCENE_LOCK_DIR_ENV_2 "TMP"
-//define this if you want to have a fallback directory, if not defined then 
+//define this if you want to have a fallback directory, if not defined then
 //the lockdirectory will be the index directory
 #define LUCENE_LOCK_DIR_ENV_FALLBACK "/tmp"
 //
@@ -89,7 +89,7 @@
 
 //
 //enable this if you want to enable reference counting. This is
-//not necessary or useful in most cases except when implementing wrappers 
+//not necessary or useful in most cases except when implementing wrappers
 //which have reference counting. If the wrapper wraps a StringReader,
 //for example, it should expect that the wrapped StringReader should not
 //be deleted. However, when the stringreader is added into a Field,
@@ -167,7 +167,7 @@
 //and especially indexing. Default is 255, but smaller numbers will decrease
 //the amount of memory used as well as increasing the speed.
 #define  LUCENE_MAX_WORD_LEN 255
-//Maximum length of a token word. 
+//Maximum length of a token word.
 //Should be the same or more than LUCENE_MAX_WORD_LEN
 //if not defined, then no token limit, but may be slower
 //if defined will be faster (up to 15% in some cases), but will use more memory
@@ -189,7 +189,7 @@
 //It seems that by predefining the text length instead of using new TCHAR[x]
 //in the constructor greatly improves the performance by 20-30% for certain
 //operations.
-//Maximum length of a term text. 
+//Maximum length of a term text.
 //Should be the same or more than LUCENE_MAX_WORD_LEN
 //if not defined, then no term text limit, but may be slower
 //if defined will be faster (up to 30% in some cases), but will use more memory
@@ -211,7 +211,7 @@
 //  defined for 9 chars. DateTools currently is configured
 //  for 30 chars, but this needs to be revised after tests
 //  are written for those.
-//	
+//
 #define DATETOOLS_BUFFER_SIZE 30
 #define DATEFIELD_DATE_LEN DATETOOLS_BUFFER_SIZE
 //
@@ -225,11 +225,10 @@
 //	This should be somewhere around the average long word.
 //	If it is longer, we waste time and space. If it is shorter, we waste a
 //	little bit of time growing the array as we encounter longer words.
-//	
+//
 #define LUCENE_TYPICAL_LONGEST_WORD_IN_INDEX 19
 //
 ////////////////////////////////////////////////////////////////////
 
 
 #endif
-

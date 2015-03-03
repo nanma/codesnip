@@ -3,7 +3,7 @@
  *
  * Distributable under the terms of either the Apache License (Version 2.0) or
  * the GNU Lesser General Public License, as specified in the COPYING file.
-------------------------------------------------------------------------------*/
+ ------------------------------------------------------------------------------*/
 #ifndef _lucene_index_IndexWriter_
 #define _lucene_index_IndexWriter_
 
@@ -33,123 +33,123 @@ class IndexDeletionPolicy;
 class Term;
 
 /**
-  An <code>IndexWriter</code> creates and maintains an index.
+   An <code>IndexWriter</code> creates and maintains an index.
 
-  <p>The <code>create</code> argument to the
-  <a href="#IndexWriter(org.apache.lucene.store.Directory, org.apache.lucene.analysis.Analyzer, boolean)"><b>constructor</b></a>
-  determines whether a new index is created, or whether an existing index is
-  opened.  Note that you
-  can open an index with <code>create=true</code> even while readers are
-  using the index.  The old readers will continue to search
-  the "point in time" snapshot they had opened, and won't
-  see the newly created index until they re-open.  There are
-  also <a href="#IndexWriter(org.apache.lucene.store.Directory, org.apache.lucene.analysis.Analyzer)"><b>constructors</b></a>
-  with no <code>create</code> argument which
-  will create a new index if there is not already an index at the
-  provided path and otherwise open the existing index.</p>
+   <p>The <code>create</code> argument to the
+   <a href="#IndexWriter(org.apache.lucene.store.Directory, org.apache.lucene.analysis.Analyzer, boolean)"><b>constructor</b></a>
+   determines whether a new index is created, or whether an existing index is
+   opened.  Note that you
+   can open an index with <code>create=true</code> even while readers are
+   using the index.  The old readers will continue to search
+   the "point in time" snapshot they had opened, and won't
+   see the newly created index until they re-open.  There are
+   also <a href="#IndexWriter(org.apache.lucene.store.Directory, org.apache.lucene.analysis.Analyzer)"><b>constructors</b></a>
+   with no <code>create</code> argument which
+   will create a new index if there is not already an index at the
+   provided path and otherwise open the existing index.</p>
 
-  <p>In either case, documents are added with <a
-  href="#addDocument(org.apache.lucene.document.Document)"><b>addDocument</b></a>
-  and removed with <a
-  href="#deleteDocuments(org.apache.lucene.index.Term)"><b>deleteDocuments</b></a>.
-  A document can be updated with <a href="#updateDocument(org.apache.lucene.index.Term, org.apache.lucene.document.Document)"><b>updateDocument</b></a>
-  (which just deletes and then adds the entire document).
-  When finished adding, deleting and updating documents, <a href="#close()"><b>close</b></a> should be called.</p>
+   <p>In either case, documents are added with <a
+   href="#addDocument(org.apache.lucene.document.Document)"><b>addDocument</b></a>
+   and removed with <a
+   href="#deleteDocuments(org.apache.lucene.index.Term)"><b>deleteDocuments</b></a>.
+   A document can be updated with <a href="#updateDocument(org.apache.lucene.index.Term, org.apache.lucene.document.Document)"><b>updateDocument</b></a>
+   (which just deletes and then adds the entire document).
+   When finished adding, deleting and updating documents, <a href="#close()"><b>close</b></a> should be called.</p>
 
-  <p>These changes are buffered in memory and periodically
-  flushed to the {@link Directory} (during the above method
-  calls).  A flush is triggered when there are enough
-  buffered deletes (see {@link #setMaxBufferedDeleteTerms})
-  or enough added documents since the last flush, whichever
-  is sooner.  For the added documents, flushing is triggered
-  either by RAM usage of the documents (see {@link
-  #setRAMBufferSizeMB}) or the number of added documents.
-  The default is to flush when RAM usage hits 16 MB.  For
-  best indexing speed you should flush by RAM usage with a
-  large RAM buffer.  You can also force a flush by calling
-  {@link #flush}.  When a flush occurs, both pending deletes
-  and added documents are flushed to the index.  A flush may
-  also trigger one or more segment merges which by default
-  run with a background thread so as not to block the
-  addDocument calls (see <a href="#mergePolicy">below</a>
-  for changing the {@link MergeScheduler}).</p>
+   <p>These changes are buffered in memory and periodically
+   flushed to the {@link Directory} (during the above method
+   calls).  A flush is triggered when there are enough
+   buffered deletes (see {@link #setMaxBufferedDeleteTerms})
+   or enough added documents since the last flush, whichever
+   is sooner.  For the added documents, flushing is triggered
+   either by RAM usage of the documents (see {@link
+   #setRAMBufferSizeMB}) or the number of added documents.
+   The default is to flush when RAM usage hits 16 MB.  For
+   best indexing speed you should flush by RAM usage with a
+   large RAM buffer.  You can also force a flush by calling
+   {@link #flush}.  When a flush occurs, both pending deletes
+   and added documents are flushed to the index.  A flush may
+   also trigger one or more segment merges which by default
+   run with a background thread so as not to block the
+   addDocument calls (see <a href="#mergePolicy">below</a>
+   for changing the {@link MergeScheduler}).</p>
 
-  <a name="autoCommit"></a>
-  <p>The optional <code>autoCommit</code> argument to the
-  <a href="#IndexWriter(org.apache.lucene.store.Directory, boolean, org.apache.lucene.analysis.Analyzer)"><b>constructors</b></a>
-  controls visibility of the changes to {@link IndexReader} instances reading the same index.
-  When this is <code>false</code>, changes are not
-  visible until {@link #close()} is called.
-  Note that changes will still be flushed to the
-  {@link org.apache.lucene.store.Directory} as new files,
-  but are not committed (no new <code>segments_N</code> file
-  is written referencing the new files) until {@link #close} is
-  called.  If something goes terribly wrong (for example the
-  JVM crashes) before {@link #close()}, then
-  the index will reflect none of the changes made (it will
-  remain in its starting state).
-  You can also call {@link #abort()}, which closes the writer without committing any
-  changes, and removes any index
-  files that had been flushed but are now unreferenced.
-  This mode is useful for preventing readers from refreshing
-  at a bad time (for example after you've done all your
-  deletes but before you've done your adds).
-  It can also be used to implement simple single-writer
-  transactional semantics ("all or none").</p>
+   <a name="autoCommit"></a>
+   <p>The optional <code>autoCommit</code> argument to the
+   <a href="#IndexWriter(org.apache.lucene.store.Directory, boolean, org.apache.lucene.analysis.Analyzer)"><b>constructors</b></a>
+   controls visibility of the changes to {@link IndexReader} instances reading the same index.
+   When this is <code>false</code>, changes are not
+   visible until {@link #close()} is called.
+   Note that changes will still be flushed to the
+   {@link org.apache.lucene.store.Directory} as new files,
+   but are not committed (no new <code>segments_N</code> file
+   is written referencing the new files) until {@link #close} is
+   called.  If something goes terribly wrong (for example the
+   JVM crashes) before {@link #close()}, then
+   the index will reflect none of the changes made (it will
+   remain in its starting state).
+   You can also call {@link #abort()}, which closes the writer without committing any
+   changes, and removes any index
+   files that had been flushed but are now unreferenced.
+   This mode is useful for preventing readers from refreshing
+   at a bad time (for example after you've done all your
+   deletes but before you've done your adds).
+   It can also be used to implement simple single-writer
+   transactional semantics ("all or none").</p>
 
-  <p>When <code>autoCommit</code> is <code>true</code> then
-  every flush is also a commit ({@link IndexReader}
-  instances will see each flush as changes to the index).
-  This is the default, to match the behavior before 2.2.
-  When running in this mode, be careful not to refresh your
-  readers while optimize or segment merges are taking place
-  as this can tie up substantial disk space.</p>
+   <p>When <code>autoCommit</code> is <code>true</code> then
+   every flush is also a commit ({@link IndexReader}
+   instances will see each flush as changes to the index).
+   This is the default, to match the behavior before 2.2.
+   When running in this mode, be careful not to refresh your
+   readers while optimize or segment merges are taking place
+   as this can tie up substantial disk space.</p>
 
-  <p>Regardless of <code>autoCommit</code>, an {@link
-  IndexReader} or {@link org.apache.lucene.search.IndexSearcher} will only see the
-  index as of the "point in time" that it was opened.  Any
-  changes committed to the index after the reader was opened
-  are not visible until the reader is re-opened.</p>
+   <p>Regardless of <code>autoCommit</code>, an {@link
+   IndexReader} or {@link org.apache.lucene.search.IndexSearcher} will only see the
+   index as of the "point in time" that it was opened.  Any
+   changes committed to the index after the reader was opened
+   are not visible until the reader is re-opened.</p>
 
-  <p>If an index will not have more documents added for a while and optimal search
-  performance is desired, then the <a href="#optimize()"><b>optimize</b></a>
-  method should be called before the index is closed.</p>
+   <p>If an index will not have more documents added for a while and optimal search
+   performance is desired, then the <a href="#optimize()"><b>optimize</b></a>
+   method should be called before the index is closed.</p>
 
-  <p>Opening an <code>IndexWriter</code> creates a lock file for the directory in use. Trying to open
-  another <code>IndexWriter</code> on the same directory will lead to a
-  {@link LockObtainFailedException}. The {@link LockObtainFailedException}
-  is also thrown if an IndexReader on the same directory is used to delete documents
-  from the index.</p>
+   <p>Opening an <code>IndexWriter</code> creates a lock file for the directory in use. Trying to open
+   another <code>IndexWriter</code> on the same directory will lead to a
+   {@link LockObtainFailedException}. The {@link LockObtainFailedException}
+   is also thrown if an IndexReader on the same directory is used to delete documents
+   from the index.</p>
 
-  <a name="deletionPolicy"></a>
-  <p>Expert: <code>IndexWriter</code> allows an optional
-  {@link IndexDeletionPolicy} implementation to be
-  specified.  You can use this to control when prior commits
-  are deleted from the index.  The default policy is {@link
-  KeepOnlyLastCommitDeletionPolicy} which removes all prior
-  commits as soon as a new commit is done (this matches
-  behavior before 2.2).  Creating your own policy can allow
-  you to explicitly keep previous "point in time" commits
-  alive in the index for some time, to allow readers to
-  refresh to the new commit without having the old commit
-  deleted out from under them.  This is necessary on
-  filesystems like NFS that do not support "delete on last
-  close" semantics, which Lucene's "point in time" search
-  normally relies on. </p>
+   <a name="deletionPolicy"></a>
+   <p>Expert: <code>IndexWriter</code> allows an optional
+   {@link IndexDeletionPolicy} implementation to be
+   specified.  You can use this to control when prior commits
+   are deleted from the index.  The default policy is {@link
+   KeepOnlyLastCommitDeletionPolicy} which removes all prior
+   commits as soon as a new commit is done (this matches
+   behavior before 2.2).  Creating your own policy can allow
+   you to explicitly keep previous "point in time" commits
+   alive in the index for some time, to allow readers to
+   refresh to the new commit without having the old commit
+   deleted out from under them.  This is necessary on
+   filesystems like NFS that do not support "delete on last
+   close" semantics, which Lucene's "point in time" search
+   normally relies on. </p>
 
-  <a name="mergePolicy"></a> <p>Expert:
-  <code>IndexWriter</code> allows you to separately change
-  the {@link MergePolicy} and the {@link MergeScheduler}.
-  The {@link MergePolicy} is invoked whenever there are
-  changes to the segments in the index.  Its role is to
-  select which merges to do, if any, and return a {@link
-  MergePolicy.MergeSpecification} describing the merges.  It
-  also selects merges to do for optimize().  (The default is
-  {@link LogByteSizeMergePolicy}.  Then, the {@link
-  MergeScheduler} is invoked with the requested merges and
-  it decides when and how to run the merges.  The default is
-  {@link ConcurrentMergeScheduler}. </p>
- */
+   <a name="mergePolicy"></a> <p>Expert:
+   <code>IndexWriter</code> allows you to separately change
+   the {@link MergePolicy} and the {@link MergeScheduler}.
+   The {@link MergePolicy} is invoked whenever there are
+   changes to the segments in the index.  Its role is to
+   select which merges to do, if any, and return a {@link
+   MergePolicy.MergeSpecification} describing the merges.  It
+   also selects merges to do for optimize().  (The default is
+   {@link LogByteSizeMergePolicy}.  Then, the {@link
+   MergeScheduler} is invoked with the requested merges and
+   it decides when and how to run the merges.  The default is
+   {@link ConcurrentMergeScheduler}. </p>
+*/
 /*
  * Clarification: Check Points (and commits)
  * Being able to set autoCommit=false allows IndexWriter to flush and
@@ -194,12 +194,12 @@ class CLUCENE_EXPORT IndexWriter:LUCENE_BASE {
   MergeScheduler* mergeScheduler;
 
   typedef  CL_NS(util)::CLLinkedList<MergePolicy::OneMerge*,
-  CL_NS(util)::Deletor::Object<MergePolicy::OneMerge> > PendingMergesType;
+      CL_NS(util)::Deletor::Object<MergePolicy::OneMerge> > PendingMergesType;
   PendingMergesType* pendingMerges;
 
   typedef CL_NS(util)::CLHashSet<MergePolicy::OneMerge*,
-  CL_NS(util)::Compare::Void<MergePolicy::OneMerge>,
-  CL_NS(util)::Deletor::Object<MergePolicy::OneMerge> > RunningMergesType;
+      CL_NS(util)::Compare::Void<MergePolicy::OneMerge>,
+      CL_NS(util)::Deletor::Object<MergePolicy::OneMerge> > RunningMergesType;
   RunningMergesType* runningMerges;
 
   typedef CL_NS(util)::CLArrayList<MergePolicy::OneMerge*> MergeExceptionsType;
@@ -235,8 +235,8 @@ class CLUCENE_EXPORT IndexWriter:LUCENE_BASE {
   void init(CL_NS(store)::Directory* d, CL_NS(analysis)::Analyzer* a, bool create, bool closeDir, IndexDeletionPolicy* deletionPolicy, bool autoCommit);
   void deinit(bool releaseWriteLock = true) throw();
 
-	// where this index resides
-	CL_NS(store)::Directory* directory;
+  // where this index resides
+  CL_NS(store)::Directory* directory;
   bool bOwnsDirectory;
 
 
@@ -260,35 +260,35 @@ class CLUCENE_EXPORT IndexWriter:LUCENE_BASE {
 
   // Used for printing messages
   STATIC_DEFINE_MUTEX(MESSAGE_ID_LOCK)
-  static int32_t MESSAGE_ID;
+      static int32_t MESSAGE_ID;
   int32_t messageID;
   mutable bool hitOOM;
 
 public:
   DEFINE_MUTEX(THIS_LOCK)
-  DEFINE_CONDITION(THIS_WAIT_CONDITION)
+      DEFINE_CONDITION(THIS_WAIT_CONDITION)
 
-	// Release the write lock, if needed.
-	SegmentInfos* segmentInfos;
+      // Release the write lock, if needed.
+      SegmentInfos* segmentInfos;
 
-	// Release the write lock, if needed.
-	virtual ~IndexWriter();
+  // Release the write lock, if needed.
+  virtual ~IndexWriter();
 
-	/**
-	*  The Java implementation of Lucene silently truncates any tokenized
-	*  field if the number of tokens exceeds a certain threshold.  Although
-	*  that threshold is adjustable, it is easy for the client programmer
-	*  to be unaware that such a threshold exists, and to become its
-	*  unwitting victim.
-	*  CLucene implements a less insidious truncation policy.  Up to
-	*  DEFAULT_MAX_FIELD_LENGTH tokens, CLucene behaves just as JLucene
-	*  does.  If the number of tokens exceeds that threshold without any
-	*  indication of a truncation preference by the client programmer,
-	*  CLucene raises an exception, prompting the client programmer to
-	*  explicitly set a truncation policy by adjusting maxFieldLength.
-	*/
-	LUCENE_STATIC_CONSTANT(int32_t, DEFAULT_MAX_FIELD_LENGTH = 10000);
-	LUCENE_STATIC_CONSTANT(int32_t, FIELD_TRUNC_POLICY__WARN = -1);
+  /**
+   *  The Java implementation of Lucene silently truncates any tokenized
+   *  field if the number of tokens exceeds a certain threshold.  Although
+   *  that threshold is adjustable, it is easy for the client programmer
+   *  to be unaware that such a threshold exists, and to become its
+   *  unwitting victim.
+   *  CLucene implements a less insidious truncation policy.  Up to
+   *  DEFAULT_MAX_FIELD_LENGTH tokens, CLucene behaves just as JLucene
+   *  does.  If the number of tokens exceeds that threshold without any
+   *  indication of a truncation preference by the client programmer,
+   *  CLucene raises an exception, prompting the client programmer to
+   *  explicitly set a truncation policy by adjusting maxFieldLength.
+   */
+  LUCENE_STATIC_CONSTANT(int32_t, DEFAULT_MAX_FIELD_LENGTH = 10000);
+  LUCENE_STATIC_CONSTANT(int32_t, FIELD_TRUNC_POLICY__WARN = -1);
 
   /**
    * Returns the maximum number of terms that will be
