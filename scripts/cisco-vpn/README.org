@@ -4,7 +4,7 @@ VPN 密码是固定密码 + 基于Google Authenticator的变化 Token。
 
 ** 通过脚本获得 Authenticator Token
 
-1.安装oath-toolkit，用于通过命令行获得 token。
+安装oath-toolkit，用于通过命令行获得 token。
 #+BEGIN_SRC sh
 brew update
 brew install oath-toolkit
