@@ -1,0 +1,47 @@
+* 通过脚本使用 Cisco AnyConnect Secure Mobility Client
+
+VPN 密码是固定密码 + 基于Google Authenticator的变化 Token。
+
+** 通过脚本获得 Authenticator Token
+
+1.安装oath-toolkit，用于通过命令行获得 token。
+#+BEGIN_SRC sh
+brew update
+brew install oath-toolkit
+#+END_SRC
+
+创建$HOME/.otpkeys 文件，输入Token生成码，格式：
+#+BEGIN_SRC sh
+「名称」=「生成码」
+例：
+google=UKPPIDEALLKPYTT9
+#+END_SRC
+
+打开终端，执行 [脚本名] [名称] 试一试:
+#+BEGIN_SRC sh
+ ~  cat ~/.otpkeys
+google=UKPPIDEALLKPYTT9
+ ~  sh ./oath.sh google
+123456
+#+END_SRC
+
+** 脚本连接 VPN
+下载安装 Cisco AnyConnect Secure Mobility Client。
+
+修改 vpn.sh 中的各项信息：
+#+BEGIN_SRC sh
+[your vpn username]
+[your vpn password]
+[profile_name]
+[vpn address]
+#+END_SRC
+
+*** 连接 VPN
+#+BEGIN_SRC sh
+./vpn.sh start
+#+END_SRC
+
+*** 断开 VPN
+#+BEGIN_SRC sh
+./vpn.sh stop
+#+END_SRC
